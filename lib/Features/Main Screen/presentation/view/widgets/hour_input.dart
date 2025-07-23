@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HourInput extends StatefulWidget {
-  const HourInput({super.key, required this.hour,required this.onChanged});
-final int hour;
-final void Function(int?) onChanged;
+  const HourInput({super.key, required this.hour, required this.onChanged});
+  final int hour;
+  final void Function(int?) onChanged;
   @override
   State<HourInput> createState() => _HourInputState();
 }
@@ -38,18 +38,24 @@ class _HourInputState extends State<HourInput> {
   ];
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<int>(
-                value: _hour,
-                hint: Text("Hour"),
-                  items: list.map<DropdownMenuItem<int>>((value) {
-                    return DropdownMenuItem<int>(
-                        value: value, child: Text(value.toString()));
-                  }).toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      _hour = val!;
-                    });
-                    widget.onChanged(val);
-                  });
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        DropdownButton<int>(
+            value: _hour,
+          //  hint: ,
+            items: list.map<DropdownMenuItem<int>>((value) {
+              return DropdownMenuItem<int>(
+                  value: value, child: Text(value.toString()));
+            }).toList(),
+            onChanged: (val) {
+              setState(() {
+                _hour = val!;
+              });
+              widget.onChanged(val);
+            }),
+            Text("o'clock"),
+      ],
+    );
   }
 }

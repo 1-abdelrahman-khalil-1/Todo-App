@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:to_do/Core/Services/get_it.dart';
 import 'package:to_do/Features/Main%20Screen/data/models/task_model.dart';
-import 'package:to_do/Features/Main%20Screen/data/repo/todo_repo.dart';
+import 'package:to_do/Features/Main%20Screen/presentation/provider/tasks_provider.dart';
 
-class CardItem extends StatelessWidget {
+class CardItem extends ConsumerWidget {
   const CardItem({
     super.key,
     required this.task,
@@ -13,7 +13,9 @@ class CardItem extends StatelessWidget {
   final TaskModel task;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todoRepo = ref.read(todoRepoProvider);
+
     return ListTile(
       title: Text(
         task.taskname,
@@ -26,12 +28,16 @@ class CardItem extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("${task.date}:00", style: TextStyle(fontSize: 16.sp),),
+          Text(
+            "${task.date}:00",
+            style: TextStyle(fontSize: 16.sp),
+          ),
           IconButton(
-            icon:  Icon(Icons.delete, color: Colors.redAccent[200]),
+            icon: Icon(Icons.delete, color: Colors.redAccent[200]),
             onPressed: () {
-              get_it<TodoRepo>().deleteTodo(id: task.id);
-              get_it<TodoRepo>().fetchAllTodos();
+              // Using Riverpod to access the repository
+              todoRepo.deleteTodo(id: task.id);
+              // No need to manually call fetchAllTodos() as the StreamProvider will handle updates
             },
           ),
         ],
@@ -47,8 +53,9 @@ class CardItem extends StatelessWidget {
           return Colors.white;
         }),
         onChanged: (value) {
-          get_it<TodoRepo>().updateTodo(id: task.id, completed: value!);
-          get_it<TodoRepo>().fetchAllTodos();
+          // Using Riverpod to access the repository
+          todoRepo.updateTodo(id: task.id, completed: value!);
+          // No need to manually call fetchAllTodos() as the StreamProvider will handle updates
         },
       ),
     );

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:to_do/Core/Services/get_it.dart';
-import 'package:to_do/Features/Main%20Screen/presentation/view/main_screen.dart';
 import 'package:to_do/Features/Splash%20Screen/view/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-setup_get_it();
-  runApp(const MainApp());
+  setup_get_it();
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -19,8 +19,8 @@ class MainApp extends StatelessWidget {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       ensureScreenSize: true,
-      child:  MaterialApp(
-        theme: ThemeData(fontFamily: "Poppins" ),
+      child: MaterialApp(
+        theme: ThemeData(fontFamily: "Poppins"),
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
       ),

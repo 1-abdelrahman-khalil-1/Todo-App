@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:to_do/Core/Services/get_it.dart';
-import 'package:to_do/Features/Main%20Screen/data/repo/todo_repo.dart';
+import 'package:to_do/Features/Main%20Screen/presentation/provider/tasks_provider.dart';
 import 'package:to_do/Features/Main%20Screen/presentation/view/widgets/taskname_input.dart';
 import 'package:to_do/Features/Main%20Screen/presentation/view/widgets/hour_input.dart';
 
-class AddTaskBottomSheet extends StatefulWidget {
+class AddTaskBottomSheet extends ConsumerStatefulWidget {
   const AddTaskBottomSheet({
     super.key,
     this.onSaved,
@@ -16,10 +16,10 @@ class AddTaskBottomSheet extends StatefulWidget {
   final String Function(String?)? validator;
 
   @override
-  State<AddTaskBottomSheet> createState() => _AddTaskBottomSheetState();
+  ConsumerState<AddTaskBottomSheet> createState() => _AddTaskBottomSheetState();
 }
 
-class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
+class _AddTaskBottomSheetState extends ConsumerState<AddTaskBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _taskNameController = TextEditingController();
   int hour = 0;
@@ -32,8 +32,9 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300.h,
+    final todoRepo = ref.read(todoRepoProvider);
+    
+    return IntrinsicHeight(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -72,8 +73,13 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     final taskname = _taskNameController.text;
-                    get_it<TodoRepo>().insertTO(taskname: taskname, date: hour, completed: false);
-                    get_it<TodoRepo>().fetchAllTodos();
+                    // Using Riverpod to access the repository
+                    todoRepo.insertTO(
+                      taskname: taskname, 
+                      date: hour, 
+                      completed: false
+                    );
+                    // No need to manually call fetchAllTodos() as the StreamProvider will handle updates
                     Navigator.pop(context);
                   }
                 },
