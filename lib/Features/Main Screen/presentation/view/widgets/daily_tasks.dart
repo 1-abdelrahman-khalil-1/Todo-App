@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:to_do/Core/Services/get_it.dart';
-import 'package:to_do/Core/utils/appimages.dart';
 import 'package:to_do/Features/Main%20Screen/data/models/task_model.dart';
-import 'package:to_do/Features/Main%20Screen/data/repo/todo_repo.dart';
 import 'package:to_do/Features/Main%20Screen/presentation/view/widgets/card_item.dart';
 
 class DailyTasks extends StatelessWidget {
